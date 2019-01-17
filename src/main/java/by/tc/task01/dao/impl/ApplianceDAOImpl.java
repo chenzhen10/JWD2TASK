@@ -1,39 +1,55 @@
 package by.tc.task01.dao.impl;
 
 import by.tc.task01.dao.ApplianceDAO;
-import by.tc.task01.entity.Appliance;
-import by.tc.task01.entity.Laptop;
 import by.tc.task01.entity.criteria.Criteria;
-import by.tc.task01.entity.criteria.SearchCriteria;
-import by.tc.task01.util.impl.ReadFromFile;
-import by.tc.task01.util.impl.ValidateFromFile;
+import by.tc.task01.util.impl.DataReader;
+import by.tc.task01.util.impl.DataValidator;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ApplianceDAOImpl implements ApplianceDAO {
+    private static final int SIX_ARGUMENT = 6;
+    private static final int FIVE_ARGUMENT = 5;
+    private static final int FOUR_ARGUMENT = 4;
+    private static final int THREE_ARGUMENT = 3;
+    private static final int TWO_ARGUMENT = 2;
+    private static final int ONE_ARGUMENT = 1;
+    private static final int ZERO_ARGUMENT = 0;
+
+    private static final String REG_EXP_FOR_CORRECT_GETTING_DATA = "[^A-z,0-9.0-9=\\-A-z0-9]";
+    private static final String REG_EXP_FOR_SEPARATE_BY_COMMA = ",";
+    private static final String REG_EXP_FOR_SEPARATE_BY_SPACE = "\\s";
+    private static final String REPLACE_EMPTY_STRING = "";
+    private static final String REPLACE_SPACE_STRING = " ";
 
 
 
 
+    public <E> List find(Criteria<E> criteria) throws FileNotFoundException {
 
-    public <E> List find(Criteria<E> criteria) {
-        ReadFromFile rf = new ReadFromFile();
-        ValidateFromFile vf = new ValidateFromFile();
+        DataReader readData = new DataReader();
+
+
+
+
+        DataValidator validateData = new DataValidator();
         List<String> finded = new ArrayList<>();
 
-        String extracted = String.valueOf(criteria.getCriteria())
-                .replaceAll("[^A-z,0-9.0-9=A-z0-9]","")
-                .replace(","," ");
+        String extractedKeys = String.valueOf(criteria.getCriteria())
+                .replaceAll(REG_EXP_FOR_CORRECT_GETTING_DATA, REPLACE_EMPTY_STRING)
+                .replace(REG_EXP_FOR_SEPARATE_BY_COMMA, REPLACE_SPACE_STRING);
 
-        String[] spliterator = extracted.split("\\s");
+        String[] spliterator = extractedKeys.split(REG_EXP_FOR_SEPARATE_BY_SPACE);
+
         try {
-            List<String> l = vf.validateFromFile(rf.readFromFile());
-            for (String str : l) {
-                differentCountOfCriteria(spliterator,str,finded);
+            List<String> appliances = validateData.validateApplianceData(readData.getFullApplianceData());
+            for (String appliance : appliances) {
+                differentCountOfCriteria(spliterator, appliance, finded);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,39 +58,50 @@ public class ApplianceDAOImpl implements ApplianceDAO {
     }
 
 
+    private void differentCountOfCriteria(String[] appliances, String appliance, List finded) {
 
-    private void differentCountOfCriteria(String [] arr,String str, List finded) {
-        if (arr.length == 6) {
-            if (str.contains(arr[0]) && str.contains(arr[1]) && str.contains(arr[2]) && str.contains(arr[3])
-                    && str.contains(arr[4]) && str.contains(arr[5])) {
-                finded.add(str);
+        if (appliances.length == SIX_ARGUMENT) {
+            if (appliance.contains(appliances[ZERO_ARGUMENT]) &&
+                    appliance.contains(appliances[ONE_ARGUMENT]) &&
+                    appliance.contains(appliances[TWO_ARGUMENT]) &&
+                    appliance.contains(appliances[THREE_ARGUMENT]) &&
+                    appliance.contains(appliances[FOUR_ARGUMENT]) &&
+                    appliance.contains(appliances[FIVE_ARGUMENT])) {
+                finded.add(appliance);
             }
-        } else if (arr.length == 5) {
-            if (str.contains(arr[0]) && str.contains(arr[1]) && str.contains(arr[2]) && str.contains(arr[3])
-                    && str.contains(arr[4])) {
-                finded.add(str);
+        } else if (appliances.length == FIVE_ARGUMENT) {
+            if (appliance.contains(appliances[ZERO_ARGUMENT]) &&
+                    appliance.contains(appliances[ONE_ARGUMENT]) &&
+                    appliance.contains(appliances[TWO_ARGUMENT]) &&
+                    appliance.contains(appliances[THREE_ARGUMENT]) &&
+                    appliance.contains(appliances[FOUR_ARGUMENT])){
+                finded.add(appliance);
             }
-        } else if (arr.length == 4) {
-            if (str.contains(arr[0]) && str.contains(arr[1]) && str.contains(arr[2]) && str.contains(arr[3])) {
-                finded.add(str);
+        } else if (appliances.length == FOUR_ARGUMENT) {
+            if (appliance.contains(appliances[ZERO_ARGUMENT]) &&
+                    appliance.contains(appliances[ONE_ARGUMENT]) &&
+                    appliance.contains(appliances[TWO_ARGUMENT]) &&
+                    appliance.contains(appliances[THREE_ARGUMENT])) {
+                finded.add(appliance);
             }
-        } else if (arr.length == 3) {
-            if (str.contains(arr[0]) && str.contains(arr[1]) && str.contains(arr[2])) {
-                finded.add(str);
+        } else if (appliances.length == THREE_ARGUMENT) {
+            if (appliance.contains(appliances[ZERO_ARGUMENT]) &&
+                    appliance.contains(appliances[ONE_ARGUMENT]) &&
+                    appliance.contains(appliances[TWO_ARGUMENT])) {
+                finded.add(appliance);
             }
-        } else if (arr.length == 2) {
-            if (str.contains(arr[0]) && str.contains(arr[1])) {
-                finded.add(str);
+        } else if (appliances.length == TWO_ARGUMENT) {
+            if (appliance.contains(appliances[ZERO_ARGUMENT]) &&
+                    appliance.contains(appliances[ONE_ARGUMENT])) {
+                finded.add(appliance);
             }
-        } else if (arr.length == 1) {
-            if (str.contains(arr[0])) {
-                finded.add(str);
+        } else if (appliances.length == ONE_ARGUMENT) {
+            if (appliance.contains(appliances[ZERO_ARGUMENT])) {
+                finded.add(appliance);
             }
-
         }
+
     }
-
-
 
 
 }

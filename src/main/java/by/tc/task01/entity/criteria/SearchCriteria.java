@@ -1,8 +1,10 @@
 package by.tc.task01.entity.criteria;
 
 public final class SearchCriteria {
-	
-	public static enum Oven{
+
+
+
+    public static enum Oven{
 		POWER_CONSUMPTION, WEIGHT, CAPACITY, DEPTH, HEIGHT, WIDTH
 	}
 	

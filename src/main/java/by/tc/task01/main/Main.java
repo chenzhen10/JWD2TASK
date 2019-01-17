@@ -1,23 +1,24 @@
 package by.tc.task01.main;
 
-import by.tc.task01.entity.Appliance;
+
 
 
 import static by.tc.task01.entity.criteria.SearchCriteria.*;
 
 import by.tc.task01.entity.criteria.Criteria;
+import by.tc.task01.entity.criteria.SearchCriteria;
 import by.tc.task01.service.ApplianceService;
 import by.tc.task01.service.ServiceFactory;
-import by.tc.task01.util.impl.ReadFromFile;
-import by.tc.task01.util.impl.ValidateFromFile;
 
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		List appliance;
+	public static void main(String[] args) {
+		List appliance = null;
 
 		ServiceFactory factory = ServiceFactory.getInstance();
 		ApplianceService service = factory.getApplianceService();
@@ -28,7 +29,11 @@ public class Main {
 		criteriaOven.setApplianceType("Oven");
 		criteriaOven.add(Oven.CAPACITY, 33);
 
-		appliance = service.find(criteriaOven);
+		try {
+			appliance = service.find(criteriaOven);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		PrintApplianceInfo.print(appliance);
 		System.out.println("*****************************************************");
@@ -40,7 +45,11 @@ public class Main {
 		criteriaOven.add(Oven.DEPTH, 60);
 		criteriaOven.setApplianceType("Oven");
 
-		appliance = service.find(criteriaOven);
+		try {
+			appliance = service.find(criteriaOven);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		PrintApplianceInfo.print(appliance);
 		System.out.println("*****************************************************");
@@ -52,11 +61,25 @@ public class Main {
 		criteriaTabletPC.add(TabletPC.DISPLAY_INCHES, 14);
 		criteriaTabletPC.add(TabletPC.MEMORY_ROM, 8000);
 
-		appliance = service.find(criteriaTabletPC);
+		try {
+			appliance = service.find(criteriaTabletPC);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		PrintApplianceInfo.print(appliance);
 
+		Criteria<Speakers> criteriaSpeakers = new Criteria<>();
+		criteriaSpeakers.setApplianceType("Speakers");
+		criteriaSpeakers.add(Speakers.CORD_LENGTH,4);
 
+		try {
+			appliance = service.find(criteriaSpeakers);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		PrintApplianceInfo.print(appliance);
 
 
 

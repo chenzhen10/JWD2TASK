@@ -7,12 +7,13 @@ import by.tc.task01.entity.criteria.Criteria;
 import by.tc.task01.service.ApplianceService;
 import by.tc.task01.service.validation.Validator;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class ApplianceServiceImpl implements ApplianceService{
 
 
-	public <E> List find(Criteria<E> criteria) {
+	public <E> List find(Criteria<E> criteria) throws FileNotFoundException {
 		if (!Validator.criteriaValidator(criteria)) {
 			System.out.println("Wrong parameters");
 			return null;
@@ -23,11 +24,11 @@ public class ApplianceServiceImpl implements ApplianceService{
 
 		List appliance = applianceDAO.find(criteria);
 
-		// you may add your own code here
+
 		
 		return appliance;
 	}
 
 }
 
-//you may add your own new classes
+

@@ -5,15 +5,14 @@ import by.tc.task01.entity.criteria.SearchCriteria;
 
 import java.util.Map;
 
-public class Validator {
+public class Validator<E> {
 
-    public static <E> boolean criteriaValidator(Criteria<E> criteria) throws IllegalArgumentException {
+    public static <E> boolean criteriaValidator(Criteria<E> criteria)  {
 
         boolean criteriaNameValid = false;
         String applianceType = criteria.getApplianceType();
 
-        CriteriaValidationManager criteriaManager = new CriteriaValidationManager();
-        Object[] allowedCriteriaNames = criteriaManager.getAllowedCriteriaNames(applianceType);
+        Object[] allowedCriteriaNames = getAllowedCriteriaNames(applianceType);
 
         for (Map.Entry entry : criteria.getCriteria().entrySet()) {
             for (Object allowedCriteriaName : allowedCriteriaNames) {
@@ -22,18 +21,16 @@ public class Validator {
                     break;
                 }
             }
-            if (!criteriaNameValid || !criteriaManager.criteriaValueValid(entry.getValue())) {
+            if (!criteriaNameValid || !criteriaValueValid(entry.getValue())) {
                 return false;
             }
             criteriaNameValid = false;
         }
         return true;
     }
-}
 
-class CriteriaValidationManager {
 
-    Object[] getAllowedCriteriaNames(String applianceType) throws IllegalArgumentException {
+    private static Object[] getAllowedCriteriaNames(String applianceType)  {
         if (applianceType == null) throw new IllegalArgumentException("Appliance type not set!");
         Object[] valuesNames = null;
         switch (applianceType) {
@@ -58,7 +55,19 @@ class CriteriaValidationManager {
         return valuesNames;
     }
 
-    boolean criteriaValueValid(Object criteriaValue) {
-        return (criteriaValue instanceof Number || criteriaValue.getClass() == String.class);
+    private static boolean criteriaValueValid(Object criteriaValue) {
+        boolean flag = true;
+        if (criteriaValue.getClass().getSimpleName().equalsIgnoreCase("Integer")) {
+            if ((int) criteriaValue < 0) {
+                flag = false;
+            }
+        } else if (criteriaValue.getClass().getSimpleName().equalsIgnoreCase("Double")) {
+            if ((double) criteriaValue < 0) {
+                flag = false;
+            }
+        }
+        return (flag || criteriaValue.getClass() == String.class);
     }
 }
+
+

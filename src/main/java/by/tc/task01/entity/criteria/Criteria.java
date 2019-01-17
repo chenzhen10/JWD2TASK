@@ -26,7 +26,7 @@ public class Criteria<E> {
 
 
     public void setApplianceType(String applianceType) {
-        this.applianceType = applianceType;
+        this.applianceType =  applianceType;
     }
 
     @Override
